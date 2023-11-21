@@ -110,7 +110,7 @@ jobs:
     - name: Merge master 
       run: |
           git fetch --unshallow
-          git checkout create_baz/${{ env.UID }}
+          git checkout main
           git pull
-          git merge --no-ff master -m "Auto-merge master"
+          git merge --no-ff create_baz/${{ env.UID }} -m "Auto-merge master"
           git push
