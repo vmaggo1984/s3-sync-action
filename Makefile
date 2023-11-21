@@ -3,13 +3,13 @@ COMPOSE_RUN_PYTHON = docker compose run --rm python
 SHELL := $(shell which bash)
 .SECONDEXPANSION:
 
-createTransformationDag: dockerDeps
-	$(COMPOSE_RUN_PYTHON) make _template.testapi
+testapi: dockerDeps
+	$(COMPOSE_RUN_PYTHON) make _template.testapipython
 
-_template.create_ingestion_dag: _pythonDeps
+testapipython.create_ingestion_dag: _pythonDeps
 	poetry run python template/testapi/create.py
 
-createIngestionPr:
+testapipr:
 	gh pr create --body-file template/testapi/PULL_REQUEST_TEMPLATE.md --fill
 
 
