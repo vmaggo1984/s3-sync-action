@@ -71,7 +71,7 @@ jobs:
       ANALYTICS_AREA: ${{ github.event.client_payload.analytics_area }}
       SRM_TIER: ${{ github.event.client_payload.srm_tier }}
       CREATE_BAZ_SNOWFLAKE_ACCOUNT: ${{ github.event.client_payload.snowflake_account }}
-
+      UID: ${{ github.run_id }}-${{ github.run_attempt }}
     steps:
     # Checkout the repository to the GitHub Actions runner
     
@@ -87,16 +87,15 @@ jobs:
           echo "SRM_TIER=${{ env.SRM_TIER }}" >> .env.local
           echo "CREATE_BAZ_SNOWFLAKE_ACCOUNT=${{ env.CREATE_BAZ_SNOWFLAKE_ACCOUNT }}" >> .env.local
           cat .env.local
-    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
+    - name: Create Baz
+      run: make testapi
+    - name: Create Branch
+      uses: stefanzweifel/git-auto-commit-action@v4
       with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
-    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
-    - name: Terraform Init
-      run: terraform init
-
-    # Checks that all Terraform configuration files adhere to a canonical format
-    - name: Terraform Format
-      run: terraform fmt -check
+        branch: create_baz/${{ env.UID }}
+        create_branch: true
+        commit_message: "Generated BAZ ${{ env.BAZ_TYPE }} ${{ env.DOMAIN_AREA }} ${{ env.ANALYTICS_AREA }}"
+    - name: Create Pull Request
+      run: make createPr
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

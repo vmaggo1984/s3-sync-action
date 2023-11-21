@@ -1,0 +1,85 @@
+services:
+  terraform:
+    image: hashicorp/terraform:${TERRAFORM_VERSION:-latest}
+    env_file:
+      - .env
+    profiles:
+      - cli
+    volumes:
+      - type: bind
+        source: .
+        target: /workspaces/${COMPOSE_PROJECT_NAME}
+    working_dir: /workspaces/${COMPOSE_PROJECT_NAME}
+    command: ${COMPOSE_COMMAND-""}
+    environment:
+      - TF_TOKEN_app_terraform_io
+
+  base:
+    build:
+      context: ./scripts/base
+    env_file:
+      - .env
+    environment:
+      - DOCKER=true
+      - CI
+      - TF_WORKSPACE_ID
+      - BAZ_TYPE
+      - DOMAIN_AREA
+      - ANALYTICS_AREA
+      - SRM_TIER
+      - SNOWFLAKE_ACCOUNT
+    profiles:
+      - cli
+    volumes:
+      - ${PWD}:${PWD}
+      - base_cache:/cache
+    working_dir: ${PWD}
+
+  python:
+    build:
+      context: ./scripts/python
+    env_file:
+      - .env
+    environment:
+      - DOCKER=true
+      - CI
+      - SNOWFLAKE_USER
+      - SNOWFLAKE_PRIVATE_KEY
+      - SNOWFLAKE_PRIVATE_KEY_PASSPHRASE
+      # Ensure externalbrowser not used for auth in docker
+      - SNOWFLAKE_AUTHENTICATOR=snowflake
+    profiles:
+      - cli
+    volumes:
+      - ${PWD}:${PWD}
+      - python_cache:/cache
+    working_dir: ${PWD}
+
+  snowflake-credentials-rotation-lambda:
+    build:
+      context: ./common/modules/snowflake-credentials
+    image: ida-snowflake/snowflake-credentials-rotation-lambda
+    env_file:
+      - .env
+    environment:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_DEFAULT_REGION
+      - AWS_REGION
+      - AWS_PROFILE
+      - AWS_SESSION_TOKEN
+      - AWS_SECURITY_TOKEN
+      - SNOWFLAKE_ACCOUNT
+      - SNOWFLAKE_USER
+      - SNOWFLAKE_PRIVATE_KEY
+      - SNOWFLAKE_PRIVATE_KEY_PATH
+      - SNOWFLAKE_PRIVATE_KEY_PASSPHRASE
+      - SNOWFLAKE_AUTHENTICATOR
+      - SNOWFLAKE_ROLE
+      - SNOWFLAKE_WAREHOUSE
+    ports:
+      - "8080"
+
+volumes:
+  base_cache:
+  python_cache:
