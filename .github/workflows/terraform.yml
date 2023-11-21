@@ -79,7 +79,7 @@ jobs:
       uses: actions/checkout@v3
       
     - name: Create .env.local
-        run: |
+      run: |
           # Merge to .env.local to ensure variables are passed to docker container
           echo "BAZ_TYPE=${{ env.BAZ_TYPE }}" >> .env.local
           echo "DOMAIN_AREA=${{ env.DOMAIN_AREA }}" >> .env.local
