@@ -4,6 +4,6 @@
   "analytics_area": "",
   "srm_tier": "",
   "snowflake_account": "",
-  "python_working_directory": "",
+  "working_directory": "",
   "__root": "."
 }

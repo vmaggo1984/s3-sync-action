@@ -32,7 +32,7 @@ if __name__ == "__main__":
             analytics_area=environ.get("ANALYTICS_AREA"),
             srm_tier=environ.get("SRM_TIER"),
             snowflake_account=environ.get("SNOWFLAKE_ACCOUNT"),
-            python_working_directory="python/testapi-{}.py".format(
+            working_directory="python/testapi-{}.py".format(
                 environ.get("DOMAIN_AREA")
             )
         )
