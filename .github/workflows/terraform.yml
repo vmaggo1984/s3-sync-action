@@ -58,7 +58,7 @@ on:
       - webhook
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   terraform:
