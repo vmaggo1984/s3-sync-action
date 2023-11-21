@@ -86,6 +86,7 @@ jobs:
           echo "ANALYTICS_AREA=${{ env.ANALYTICS_AREA }}" >> .env.local
           echo "SRM_TIER=${{ env.SRM_TIER }}" >> .env.local
           echo "CREATE_BAZ_SNOWFLAKE_ACCOUNT=${{ env.CREATE_BAZ_SNOWFLAKE_ACCOUNT }}" >> .env.local
+          cat .env.local
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
