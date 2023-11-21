@@ -107,10 +107,11 @@ jobs:
       run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "Github Actions"
-    - name: Merge master 
-      run: |
-          git fetch --unshallow
-          git checkout master
-          git pull
-          git merge --no-ff create_baz/${{ env.UID }} -m "Auto-merge master"
-          git push
+    
+    - name: Merge to master
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          target_branch: master
+          message: Merge staging into master
+          github_token: ${{ secrets.GITHUB_TOKEN }}
