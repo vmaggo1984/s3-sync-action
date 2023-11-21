@@ -64,18 +64,28 @@ jobs:
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
-    environment: production
-
-    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
-    defaults:
-      run:
-        shell: bash
+    env:
+      # Pass inputs to env definitions to prevent injection attacks
+      BAZ_TYPE: ${{ github.event.client_payload.baz_type }}
+      DOMAIN_AREA: ${{ github.event.client_payload.domain_area }}
+      ANALYTICS_AREA: ${{ github.event.client_payload.analytics_area }}
+      SRM_TIER: ${{ github.event.client_payload.srm_tier }}
+      CREATE_BAZ_SNOWFLAKE_ACCOUNT: ${{ github.event.client_payload.snowflake_account }}
 
     steps:
     # Checkout the repository to the GitHub Actions runner
+    
     - name: Checkout
       uses: actions/checkout@v3
-
+      
+    - name: Create .env.local
+        run: |
+          # Merge to .env.local to ensure variables are passed to docker container
+          echo "BAZ_TYPE=${{ env.BAZ_TYPE }}" >> .env.local
+          echo "DOMAIN_AREA=${{ env.DOMAIN_AREA }}" >> .env.local
+          echo "ANALYTICS_AREA=${{ env.ANALYTICS_AREA }}" >> .env.local
+          echo "SRM_TIER=${{ env.SRM_TIER }}" >> .env.local
+          echo "CREATE_BAZ_SNOWFLAKE_ACCOUNT=${{ env.CREATE_BAZ_SNOWFLAKE_ACCOUNT }}" >> .env.local
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
