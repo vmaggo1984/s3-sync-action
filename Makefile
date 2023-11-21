@@ -4,9 +4,9 @@ SHELL := $(shell which bash)
 .SECONDEXPANSION:
 
 testapi: dockerDeps
-	$(COMPOSE_RUN_PYTHON) make _template.testapipython
+	$(COMPOSE_RUN_PYTHON) make _template.testapi
 
-testapipython.create_ingestion_dag: _pythonDeps
+_template.testapi: _pythonDeps
 	poetry run python template/testapi/create.py
 
 testapipr:
