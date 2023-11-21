@@ -108,10 +108,12 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "Github Actions"
     
+    - uses: actions/checkout@create_baz/${{ env.UID }}
+
     - name: Merge to master
       uses: devmasx/merge-branch@master
       with:
         type: now
         target_branch: master
-        message: Merge staging into master
+        message: Merge feature branch into master
         github_token: ${{ secrets.GITHUB_TOKEN }}
