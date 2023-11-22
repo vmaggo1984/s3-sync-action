@@ -109,4 +109,5 @@ jobs:
       run: |
         gh pr merge   --merge --delete-branch  "$PR_URL"
       env:
+        PR_URL: ${{ steps.create_pr.outputs.PR_URL }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
