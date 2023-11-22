@@ -11,7 +11,7 @@ _template.testapi: _pythonDeps
 
 testapipr:
 	gh pr create --body-file template/testapi/PULL_REQUEST_TEMPLATE.md --fill
-
+	gh pr merge  --merge --delete-branch
 
 dockerDeps: envFile
 
