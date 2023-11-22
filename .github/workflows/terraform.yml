@@ -98,7 +98,14 @@ jobs:
         branch: create_baz/${{ env.UID }}
         create_branch: true
         commit_message: "Generated BAZ ${{ env.BAZ_TYPE }} ${{ env.DOMAIN_AREA }} ${{ env.ANALYTICS_AREA }}"
-    - name: Create and Merge Pull Request
+    - name: Create Pull Request
       run: make testapipr
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      id: create_pr
+    
+    - name: Merge Pull Request
+      run: |
+        gh pr merge  ${{steps.create_pr.outputs}}   --merge --delete-branch 
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
