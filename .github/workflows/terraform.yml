@@ -107,6 +107,8 @@ jobs:
     
     - name: Merge Pull Request
       run: |
+        echo "${{ env.PR_URL }}"
+        echo "$PR_URL"
         gh pr merge   --merge --delete-branch  "$PR_URL"
       env:
         PR_URL: ${{ steps.create_pr.outputs.PR_URL }}
